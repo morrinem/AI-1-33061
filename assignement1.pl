@@ -1,3 +1,5 @@
+%kb is [[q,a],[q,b,c],[a,d,e],[a,c,e,f],[b,c],[c,e,f],[e],[f,e]]
+
 %arc(?[H|T], +Node, ?Cost, +KB)
 arc([H|T],Node,Cost,KB) :- member([H|B],KB), append(B,T,Node),
 	length(B,L), Cost is 1+ L/(L+1).
@@ -9,11 +11,11 @@ goal([]).
 
 %add2frontier(+Children, ?More, ?New).
 add2frontier([], _, _).
-add2frontier([H|T], [], []) :- !, add2frontier(T, [], H).
+add2frontier([H|T], [], []) :- add2frontier(T, [], H).
 add2frontier([H|T], More, New) :- 
-    lessThan(H,New), !, append(New, More), add2frontier(T, More, New).
-add2frontier([H|T], More, New) :-
-    append(H, More), add2frontier(T, More, New).
+    lessThan(H,New), !, add2frontier(T, More, New), append(New, More).
+add2frontier([H|T], More, New) :- 
+    add2frontier(T, More, New), append(H, More).
 
 
 %lessThan([[Node1|_], Cost1], [[Node2|_], Cost2]])
